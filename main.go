@@ -22,15 +22,16 @@ func getRobots(host string) *Robots{
 	
 	resp, err := http.Get(host + "/robots.txt")
 	
+	r := new(Robots)
 	if err != nil {
-		panic(err.Error())
+		//panic(err.Error())
+		return r
 	}
 	
-	Logger.Print(host, http.DetectContentType(bufio.NewScanner(resp.Body).Bytes()))
+	Logger.Printf("%s %s\n", host, http.DetectContentType(bufio.NewScanner(resp.Body).Bytes()))
 	
 	defer resp.Body.Close()
 
-	r := new(Robots)
 	r.Address = host
 	r.NewRobots(GetScannerFromHttpReponse(resp))
 	return r

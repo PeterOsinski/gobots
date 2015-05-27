@@ -38,6 +38,10 @@ func (robots *Robots) NewRobots(s *bufio.Scanner) {
 	for s.Scan() {
 		line := s.Text()
 		
+		if isHtml(line) {
+			return
+		}
+		
 		if v, ok := check(line, UA_DEF); ok {
 			robots.UserAgent = append(robots.UserAgent, v)
 		}else if v, ok := check(line, SITEMAP_DEF); ok {
@@ -57,4 +61,18 @@ func (robots *Robots) NewRobots(s *bufio.Scanner) {
 	}
 	
 	Logger.Print(robots)
+}
+
+func isHtml(str string) bool{
+	
+	has := false
+	tags := []string{"<html>", "<div>","</html>", "</div>","<head>","<body>"}
+	
+	for _,tag := range tags {
+		if strings.Contains(str, tag) {
+			has = true
+		}
+	}
+	
+	return has
 }
